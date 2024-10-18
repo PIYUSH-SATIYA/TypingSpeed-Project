@@ -1,34 +1,55 @@
 #include <stdio.h>
 #include <time.h>
-#include <string.h>
+#include <conio.h> // For kbhit() and getch()
 
 int main()
 {
-
     int start;
-    int length;
     long long int start_time;
-    long long int end_time;
     char typed[1000];
+    int length = 0;
+    int count = 0;
 
-    printf("Hello\nWelcome to typing speed checker!");
+    printf("Hello\nWelcome to the typing speed checker!\n");
 
-    printf("press 1 to start typing: \n");
+    printf("Press 1 to start typing: \n");
     scanf("%d", &start);
+
+    getchar();
 
     if (start)
     {
         start_time = time(NULL);
-        while (difftime(time(NULL), start_time) <= 10)
+        printf("Start typing now! You have 60 seconds:\n");
+
+        while (difftime(time(NULL), start_time) < 60)
         {
-            fgets(typed, 1000, stdin);
-            length = strlen(typed);
-            // printf("%d\n", difftime(time(NULL), start_time));
+            /*
+                kbhit() :
+                Returns 1(true) if a key is pressed.
+                Returns 0(false) if no key is pressed.
+                Non blocking: allows the program to continue executing.
+            */
             
+            if (kbhit())
+            {
+                char ch = getch();
+                if (ch == ' ')
+                {
+                    count++;
+                }
+
+                printf("%c", ch);
+                typed[length] = ch; 
+                length++;           
+            }
         }
+
+        typed[length] = '\0';
     }
 
-    printf("your typing speed is: %d characters per 10 sec\n", length);
+    printf("\nYou typed %d characters in minute\n", length);
+    printf("Your typing speed is: %d words per minute\n", count);
 
     return 0;
 }
