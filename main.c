@@ -12,44 +12,47 @@ int main()
 
     printf("Hello\nWelcome to the typing speed checker!\n");
 
-    printf("Press 1 to start typing: \n");
-    scanf("%d", &start);
+    printf("Press any key to start typing: \n");
+    getch();
+    // getchar(); will not work as it waits for enter to be pressed while getch immediately returns as soon as any of the keys is pressed
 
-    getchar();
+    printf("\n");
 
-    if (start)
+    start_time = time(NULL);
+    printf("Start typing now! You have 60 seconds:\n");
+
+    while (difftime(time(NULL), start_time) < 60)
     {
-        start_time = time(NULL);
-        printf("Start typing now! You have 60 seconds:\n");
+        /*
+            kbhit() :
+            Returns 1(true) if a key is pressed.
+            Returns 0(false) if no key is pressed.
+            Non blocking: allows the program to continue executing.
+        */
 
-        while (difftime(time(NULL), start_time) < 60)
+        printf("\rTime remaining: %d ", 60 - ((time(NULL) - start_time)));
+        fflush(stdout);
+        // \r moves the cursor to the starting of the same line again and again which is suitable for this timer like application
+
+        if (kbhit())
         {
-            /*
-                kbhit() :
-                Returns 1(true) if a key is pressed.
-                Returns 0(false) if no key is pressed.
-                Non blocking: allows the program to continue executing.
-            */
-            
-            if (kbhit())
+            char ch = getch();
+            if (ch == ' ' || ch == '\n')
             {
-                char ch = getch();
-                if (ch == ' ')
-                {
-                    count++;
-                }
-
-                printf("%c", ch);
-                typed[length] = ch; 
-                length++;           
+                count++;
             }
-        }
 
-        typed[length] = '\0';
+            printf("%c", ch);
+            typed[length] = ch;
+            length++;
+        }
     }
 
+    typed[length] = '\0';
+
     printf("\nYou typed %d characters in minute\n", length);
-    printf("Your typing speed is: %d words per minute\n", count);
+    printf("Your typing speed is: %d words per minute\n\n", count);
+    printf("you typed\n\n%s", typed);
 
     return 0;
 }
